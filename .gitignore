@@ -129,3 +129,6 @@ dmypy.json
 .pyre/
 .idea/modules.xml
 .idea/
+service_account.json/
+
+src/service_account.json
