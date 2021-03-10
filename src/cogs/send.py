@@ -15,15 +15,6 @@ class SendCog(commands.Cog, name="Send"):
     def cog_unload(self):
         self.update.cancel()
 
-    @commands.command(name='m')
-    async def check(self, ctx):
-        load_dotenv()
-        gc = gspread.service_account(filename='service_account.json')
-        sheet = gc.open('Discord Announcements')
-        worksheet = sheet.get_worksheet(0)
-        list_of_dicts = worksheet.get_all_records()
-        await ctx.send(list_of_dicts)
-
     @tasks.loop(seconds=60)
     async def update(self):
         print("Checking")
