@@ -1,4 +1,5 @@
 import traceback
+from random import choice
 import logging
 from os import getenv
 
@@ -18,11 +19,19 @@ bot = commands.Bot(command_prefix='m', intents=intents)
 @bot.event
 async def on_ready():
     print('Ready')
+    await bot.change_presence(activity=choice(statuses))
 
 initial_cogs = [
     "cogs.send"
 ]
 loaded_cogs = []
+
+statuses = [
+    discord.Game("(Sigh)"),
+    discord.Game("CodeDay is the name of game"),
+    discord.Game("Made by FireFox"),
+]
+
 
 # Here we load our extensions(cogs) listed above in [initial_extensions].
 failed_cogs = []

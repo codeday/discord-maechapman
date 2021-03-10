@@ -26,17 +26,15 @@ class SendCog(commands.Cog, name="Send"):
 
     @tasks.loop(seconds=60)
     async def update(self):
-        print("Updating Variable")
+        print("Checking")
         gc = gspread.service_account(filename='service_account.json')
         sheet = gc.open('Discord Announcements')
         worksheet = sheet.get_worksheet(0)
         records = worksheet.get_all_records()
         self.events = records
         for record in records:
-            print(records)
-            print(record['Time'])
             (timestamp) = str(datetime.datetime.today())
-            print(str(timestamp))
+
             if record['Posted'] == 'FALSE':
                 if str(record['Time']) in timestamp:
                     message_channel = await self.bot.fetch_channel(int(record['ChannelID']))
@@ -44,8 +42,7 @@ class SendCog(commands.Cog, name="Send"):
                     announcement_cell = worksheet.find(str(record['Announcement']))
                     announcement_row = announcement_cell.row
                     worksheet.update_cell(announcement_row, 5, "TRUE")
-                    print(announcement_row)
-                continue
+                    continue
 
 
 def setup(bot):
