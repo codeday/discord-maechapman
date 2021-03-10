@@ -10,6 +10,7 @@ from discord import message
 
 intents = discord.Intents.default()
 intents.members = True
+intents.guilds = True
 BOT_TOKEN = getenv("BOT_TOKEN", None)
 bot = commands.Bot(command_prefix='m', intents=intents)
 
