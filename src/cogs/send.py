@@ -31,8 +31,7 @@ class SendCog(commands.Cog, name="Send"):
         sheet = gc.open('Discord Announcements')
         worksheet = sheet.get_worksheet(0)
         records = worksheet.get_all_records()
-        self.events = records
-        for record in records:
+        for index, record in enumerate(records):
             (timestamp) = str(datetime.datetime.today())
 
             if record['Posted'] == 'FALSE':
@@ -43,14 +42,13 @@ class SendCog(commands.Cog, name="Send"):
                     announcement_row = announcement_cell.row
                     worksheet.update_cell(announcement_row, 5, "TRUE")
 
-
-                     worksheet.delete_row(announcement_row)
-
+                    worksheet.delete_row(announcement_row)
+                    records[index]['Posted'] = 'TRUE'
                     finished_worksheet = sheet.get_worksheet(1)
-                    finished_worksheet.append_row([record[val] for val in ("ChannelName", "ChannelID", "Announcement", "Time", "Posted")])                
-                    
-                continue
+                    finished_worksheet.append_row(
+                        [str(record[val]) for val in ("ChannelName", "ChannelID", "Announcement", "Time", "Posted")])
 
+                continue
 
 
 def setup(bot):
