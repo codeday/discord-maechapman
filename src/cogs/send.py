@@ -41,8 +41,11 @@ class SendCog(commands.Cog, name="Send"):
                 if str(record['Time']) in timestamp:
                     message_channel = await self.bot.fetch_channel(int(record['ChannelID']))
                     await message_channel.send(str(record['Announcement']))
-
-                return
+                    announcement_cell = worksheet.find(str(record['Announcement']))
+                    announcement_row = announcement_cell.row
+                    worksheet.update_cell(announcement_row, 5, "TRUE")
+                    print(announcement_row)
+                continue
 
 
 def setup(bot):
