@@ -42,7 +42,15 @@ class SendCog(commands.Cog, name="Send"):
                     announcement_cell = worksheet.find(str(record['Announcement']))
                     announcement_row = announcement_cell.row
                     worksheet.update_cell(announcement_row, 5, "TRUE")
-                    continue
+
+
+                     worksheet.delete_row(announcement_row)
+
+                    finished_worksheet = sheet.get_worksheet(1)
+                    finished_worksheet.append_row([record[val] for val in ("ChannelName", "ChannelID", "Announcement", "Time", "Posted")])                
+                    
+                continue
+
 
 
 def setup(bot):
