@@ -43,7 +43,8 @@ class SendCog(commands.Cog, name="Send"):
                     self.records[index]['Posted'] = 'TRUE'
                     finished_worksheet = self.sheet.get_worksheet(1)
                     finished_worksheet.append_row(
-                        [str(self.record[val]) for val in ("ChannelName", "ChannelID", "Announcement", "Time", "Posted")])
+                        [str(self.record[val]) for val in
+                         ("ChannelName", "ChannelID", "Announcement", "Time", "Posted")])
 
                 continue
 
