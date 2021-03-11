@@ -29,7 +29,7 @@ class SendCog(commands.Cog, name="Send"):
     async def update(self):
         print("Checking")
         for index, self.record in enumerate(self.records):
-            timestamp = datetime.today().strftime("%Y-%m-%d %H:%M")
+            timestamp = datetime.today().strftime("%m/%d/%Y %H:%M")
             if self.record['Posted'] == 'FALSE':
                 if str(self.record['Time']) in timestamp:
                     message_channel = await self.bot.fetch_channel(int(self.record['ChannelID']))
