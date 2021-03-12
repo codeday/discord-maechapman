@@ -11,7 +11,7 @@ class SendCog(commands.Cog, name="Send"):
         self.records = []
         self.check.start()
         self.update.start()
-        self.gc = gspread.service_account(filename='service_account.json')
+        self.gc = gspread.service_account(filename='./service_account.json')
         self.sheet = self.gc.open('Discord Announcements')
         self.worksheet = self.sheet.get_worksheet(0)
 
