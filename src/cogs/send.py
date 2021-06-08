@@ -1,8 +1,22 @@
+import os
 from datetime import datetime
+
 import gspread
-import discord
-from discord import client, message
 from discord.ext import commands, tasks
+
+credentials = {
+    "type": os.getenv('TYPE', None),
+    "project_id": os.getenv('PROJECT_ID', None),
+    "private_key_id": os.getenv('PRIVATE_KEY_ID', None),
+    "private_key": os.getenv('PRIVATE_KEY', None),
+    "client_email": os.getenv('CLIENT_EMAIL', None),
+    "client_id": os.getenv('CLIENT_ID', None),
+    "auth_uri": os.getenv('AUTH_URI', None),
+    "token_uri": os.getenv('TOKEN_URI', None),
+    "auth_provider_x509_cert_url": os.getenv('AUTH_PROVIDER_X509_CERT_URL', None),
+    "client_x509_cert_url": os.getenv('CLIENT_X509_CERT_URL', None),
+
+}
 
 
 class SendCog(commands.Cog, name="Send"):
@@ -11,7 +25,7 @@ class SendCog(commands.Cog, name="Send"):
         self.records = []
         self.check.start()
         self.update.start()
-        self.gc = gspread.service_account(filename='service_account.json')
+        self.gc = gspread.service_account_from_dict(credentials, None)
         self.sheet = self.gc.open('Discord Announcements')
         self.worksheet = self.sheet.get_worksheet(0)
 
@@ -27,19 +41,24 @@ class SendCog(commands.Cog, name="Send"):
     @tasks.loop(seconds=60)
     async def update(self):
         print("Checking")
-        for index, record in enumerate(self.records):
-            try:
-                if record['Posted'] == 'FALSE':
-                    now = datetime.today()
-                    announcement_time = datetime.strptime(record['Time'], '%m/%d/%Y %H:%M:%S')
-                    if now >= announcement_time:
-                        message_channel = await self.bot.fetch_channel(int(record['ChannelID']))
-                        await message_channel.send(str(record['Announcement']))
-                        self.records[index]['Posted'] = 'TRUE'
-                        announcement_row = self.worksheet.find(str(record['Announcement ID'])).row
-                        self.worksheet.update_cell(row=announcement_row, col=5, value='TRUE')
-            except ValueError:
-                pass
+        for index, self.record in enumerate(self.records):
+            timestamp = datetime.today().strftime("%m/%d/%Y %H:%M")
+            if self.record['Posted'] == 'FALSE':
+                if str(self.record['Time']) in timestamp:
+                    message_channel = await self.bot.fetch_channel(int(self.record['ChannelID']))
+                    await message_channel.send(str(self.record['Announcement']))
+                    announcement_cell = self.worksheet.find(str(self.record['Announcement']))
+                    announcement_row = announcement_cell.row
+                    self.worksheet.update_cell(announcement_row, 5, "TRUE")
+
+                    self.worksheet.delete_row(announcement_row)
+                    self.records[index]['Posted'] = 'TRUE'
+                    finished_worksheet = self.sheet.get_worksheet(1)
+                    finished_worksheet.append_row(
+                        [str(self.record[val]) for val in
+                         ("ChannelName", "ChannelID", "Announcement", "Time", "Posted")])
+
+                continue
 
 
 def setup(bot):
