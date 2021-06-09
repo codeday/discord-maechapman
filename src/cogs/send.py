@@ -30,6 +30,7 @@ class SendCog(commands.Cog, name="Send"):
         for index, self.record in enumerate(self.records):
             timestamp = datetime.today().strftime("%m/%d/%Y %H:%M")
             if self.record['Posted'] == 'FALSE':
+                print(timestamp)
                 if str(self.record['Time']) in timestamp:
                     message_channel = await self.bot.fetch_channel(int(self.record['ChannelID']))
                     await message_channel.send(str(self.record['Announcement']))
@@ -37,12 +38,6 @@ class SendCog(commands.Cog, name="Send"):
                     announcement_row = announcement_cell.row
                     self.worksheet.update_cell(announcement_row, 5, "TRUE")
 
-                    self.worksheet.delete_row(announcement_row)
-                    self.records[index]['Posted'] = 'TRUE'
-                    finished_worksheet = self.sheet.get_worksheet(1)
-                    finished_worksheet.append_row(
-                        [str(self.record[val]) for val in
-                         ("ChannelName", "ChannelID", "Announcement", "Time", "Posted")])
 
                 continue
 
