@@ -1,22 +1,8 @@
-import os
 from datetime import datetime
+from src.credentials import credentials
 
 import gspread
 from discord.ext import commands, tasks
-
-credentials = {
-    "type": os.getenv('TYPE', None),
-    "project_id": os.getenv('PROJECT_ID', None),
-    "private_key_id": os.getenv('PRIVATE_KEY_ID', None),
-    "private_key": os.getenv('PRIVATE_KEY', None),
-    "client_email": os.getenv('CLIENT_EMAIL', None),
-    "client_id": os.getenv('CLIENT_ID', None),
-    "auth_uri": os.getenv('AUTH_URI', None),
-    "token_uri": os.getenv('TOKEN_URI', None),
-    "auth_provider_x509_cert_url": os.getenv('AUTH_PROVIDER_X509_CERT_URL', None),
-    "client_x509_cert_url": os.getenv('CLIENT_X509_CERT_URL', None),
-
-}
 
 
 class SendCog(commands.Cog, name="Send"):
@@ -25,7 +11,7 @@ class SendCog(commands.Cog, name="Send"):
         self.records = []
         self.check.start()
         self.update.start()
-        self.gc = gspread.service_account_from_dict(credentials, None)
+        self.gc = gspread.service_account_from_dict(credentials)
         self.sheet = self.gc.open('Discord Announcements')
         self.worksheet = self.sheet.get_worksheet(0)
 

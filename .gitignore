@@ -133,3 +133,5 @@ service_account.json/
 
 src/service_account.json
 
+src/credentials.py
+
